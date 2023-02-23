@@ -14,7 +14,7 @@ function App() {
     setError(null);
     try {
       const response = await fetch(
-        "https://delete-post-default-rtdb.asia-southeast1.firebasedatabase.app/movies.json"
+        "https://react-https-d4c87-default-rtdb.firebaseio.com/movies.json"
       );
       if (!response.ok) {
         throw new Error("Something went wrong...Retrying");
@@ -43,14 +43,15 @@ function App() {
   }, [fetchMoviesHandler]);
 
   const deleteMovieHandler = useCallback(async (id) => {
-    // https://react-http-cba4b-default-rtdb.firebaseio.com/movies/-NHB7l3SSaVMg17wOC2S
-  
-      const response=await fetch(
-      `https://delete-post-default-rtdb.asia-southeast1.firebasedatabase.app/movies.json/${id}`,
+    const response=await fetch(
+      `https://react-https-d4c87-default-rtdb.firebaseio.com/movies/${id}.json`,
       {
-        method: 'DELETE'
+        method: 'DELETE',
+        body: JSON.stringify(id),
+        headers: {
+          "Context-Type": "application/json",
+        },
       }
-      
     );
     //setMovies(Movies.filter((movie) => movie.id !== id));
     console.log(response);
@@ -64,7 +65,7 @@ function App() {
     content = <p>{error}</p>;
   }
   if (Movies.length > 0) {
-    content = <MoviesList movies={Movies} onDeleteMovie={deleteMovieHandler.bind(null,id)} />;
+    content = <MoviesList movies={Movies} onDeleteMovie={deleteMovieHandler} />;
     console.log(Movies);
   }
   if (isLoading) {
@@ -73,7 +74,7 @@ function App() {
 
   const addMovieHandler = async (movie) => {
     const response = await fetch(
-      "https://delete-post-default-rtdb.asia-southeast1.firebasedatabase.app/movies.json",
+      "https://react-https-d4c87-default-rtdb.firebaseio.com/movies.json",
       {
         method: "POST",
         body: JSON.stringify(movie),
